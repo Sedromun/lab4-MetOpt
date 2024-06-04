@@ -29,7 +29,7 @@ def stat_method(
             end_time = time.time()
         except Exception:
             errors += 1
-            # print(f"ERROR, func={func.name}")
+            print(f"ERROR, func={func.name}")
         else:
             elapsed_time += end_time - start_time
             if abs(func.f(x, y) - func.min) < 0.001:

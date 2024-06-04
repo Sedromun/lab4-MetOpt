@@ -1,9 +1,12 @@
 from typing import Callable
 
+import numpy as np
+
 from math_module.functions import functions
 from methods_module.gradient import FunctionNonConvergence, gradient_descent
 from methods_module.my_bfgs import my_bfgs
 from methods_module.newton import newton
+from methods_module.simulated_annealing import SimulatedAnnealing
 from visualisation_module.statistic import sub_stat
 from visualisation_module.visualisation import *
 from methods_module.scipy_methods import *
@@ -11,7 +14,6 @@ from methods_module.d1_methods import *
 from methods_module.coordinate_descent import *
 from random import randint as rand
 from math_module.functions import functions
-from tabulate import tabulate
 from methods_module.my_bfgs import my_bfgs
 import time
 
@@ -124,6 +126,14 @@ def process_my_BFSG(func, start):
     draw(points, func, x, y, title="my BFSG")
 
 
+def process_annealing(func, start):
+    fn = logger(func.f)
+    sa = SimulatedAnnealing(lambda vec: fn(vec[0], vec[1]), (np.array([-10, -10]), np.array([10, 10])))
+    x, y, states, costs = sa.annealing()
+    print("SIMULATED ANNEALING: ", x, y, " Value :=", func.f(x, y))
+    draw(points, func, x, y, title="SIMULATED ANNEALING")
+
+
 def draw(dots, func, x, y, title: str = ""):
     draw_graphic(dots, func, title=title)
     draw_graphic_2(dots, func, title=title)
@@ -131,36 +141,48 @@ def draw(dots, func, x, y, title: str = ""):
     draw_chart(func, (x, y), title=title)
 
 
-def stat():
-    sub_stat(gradient_descent, "GRADIENT DESCENT")
-    sub_stat(lambda f, p: gradient_descent(f, p, calc_learning_rate), "GRADIENT DESCENT D1")
-    sub_stat(coordinate_descent, "COORDINATE DESCENT")
-    sub_stat(nelder_mead, "NELDER MEAD")
+def anneal(func, start):
+    sa = SimulatedAnnealing(lambda x: func(x[0], x[1]), (np.array([-10, -10]), np.array([10, 10])))
+    state, mn, states, costs = sa.annealing()
+    return state[0], mn
 
-    sub_stat(newton, "NEWTON")
-    sub_stat(lambda f, p: newton(f, p, calc_learning_rate), "NEWTON WITH D1 OPTIMIZATION")
-    sub_stat(newton_cg, "NEWTON-CG")
-    sub_stat(my_bfgs, "JEKA's BFSG")
-    sub_stat(BFSG, "BFSG")
+
+def stat():
+    # sub_stat(gradient_descent, "GRADIENT DESCENT")
+    # sub_stat(lambda f, p: gradient_descent(f, p, calc_learning_rate), "GRADIENT DESCENT D1")
+    # sub_stat(coordinate_descent, "COORDINATE DESCENT")
+    # sub_stat(nelder_mead, "NELDER MEAD")
+    #
+    # sub_stat(newton, "NEWTON")
+    # sub_stat(lambda f, p: newton(f, p, calc_learning_rate), "NEWTON WITH D1 OPTIMIZATION")
+    # sub_stat(newton_cg, "NEWTON-CG")
+    # sub_stat(my_bfgs, "JEKA's BFSG")
+    # sub_stat(BFSG, "BFSG")
+    sub_stat(anneal, "SIMULATED ANNEALING")
 
 
 def run(func, st_point):
-    process_gradient_descent(func, st_point)
-    process_d1_search_gradient(func, st_point)
-    process_coordinate_descent(func, st_point)
-    process_nelder_mead(func, start_point)
+    # process_gradient_descent(func, st_point)
+    # process_d1_search_gradient(func, st_point)
+    # process_coordinate_descent(func, st_point)
+    # process_nelder_mead(func, start_point)
 
     # process_newton(func, start_point)
     # process_d1_search_newton(func, st_point)
-    process_newton_cg(func, st_point)
-    process_BFSG(func, st_point)
-    process_my_BFSG(func, st_point)
+    # process_newton_cg(func, st_point)
+    # process_BFSG(func, st_point)
+    # process_my_BFSG(func, st_point)
+    process_annealing(func, st_point)
+
+def test_fn(x):
+    return np.linalg.norm(x ** 2)
 
 
 if __name__ == '__main__':
     start_point = (rand(-8, 8), rand(-8, 8))
     # stat()
 
-    process_coordinate_descent(functions[4], (6, -5))
+    # process_coordinate_descent(functions[4], (6, -5))
 
-    # run(functions[0], start_point)  # TODO
+    run(functions[1], start_point)  # TODO
+
