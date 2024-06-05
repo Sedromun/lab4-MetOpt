@@ -10,7 +10,7 @@
 <img src=https://memepedia.ru/wp-content/uploads/2023/03/igor-gofman-7-8-odezhda-mem-4.png>
 
 
-Лабораторная работа №2: Методы Ньютона
+Лабораторная работа №4: Метод имитации отжига
 
 Артемьев Иван (Backend Python senior)
 
