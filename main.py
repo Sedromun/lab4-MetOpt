@@ -186,5 +186,5 @@ if __name__ == '__main__':
 
     # process_coordinate_descent(functions[4], (6, -5))
 
-    # run(functions[1], start_point)  # TODO
+    # run(functions[4], start_point)  # TODO
 
