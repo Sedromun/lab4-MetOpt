@@ -129,7 +129,9 @@ def process_my_BFSG(func, start):
 def process_annealing(func, start):
     fn = logger(func.f)
     sa = SimulatedAnnealing(lambda vec: fn(vec[0], vec[1]), (np.array([-10, -10]), np.array([10, 10])))
-    x, y, states, costs = sa.annealing()
+    state, val, states, costs = sa.annealing(start_point=start)
+    x = state[0]
+    y = state[1]
     print("SIMULATED ANNEALING: ", x, y, " Value :=", func.f(x, y))
     draw(points, func, x, y, title="SIMULATED ANNEALING")
 
@@ -143,8 +145,8 @@ def draw(dots, func, x, y, title: str = ""):
 
 def anneal(func, start):
     sa = SimulatedAnnealing(lambda x: func(x[0], x[1]), (np.array([-10, -10]), np.array([10, 10])))
-    state, mn, states, costs = sa.annealing()
-    return state[0], mn
+    state, mn, states, costs = sa.annealing(start_point=start)
+    return state[0], state[1]
 
 
 def stat():
@@ -180,9 +182,9 @@ def test_fn(x):
 
 if __name__ == '__main__':
     start_point = (rand(-8, 8), rand(-8, 8))
-    # stat()
+    stat()
 
     # process_coordinate_descent(functions[4], (6, -5))
 
-    run(functions[1], start_point)  # TODO
+    # run(functions[1], start_point)  # TODO
 

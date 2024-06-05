@@ -12,7 +12,7 @@ def stat_method(
         method: Callable[[Callable[[float, float], float], tuple[float, float]], tuple[float, float]],
         func: FuncWrapper,
 ):
-    attempts, success, semi_success, errors, call = 1000, 0, 0, 0, 0
+    attempts, success, semi_success, errors, call = 100, 0, 0, 0, 0
 
     elapsed_time = 0
 

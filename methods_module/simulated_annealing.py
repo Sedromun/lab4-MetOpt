@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 
 
@@ -7,13 +9,15 @@ class SimulatedAnnealing:
         self.cost_function = cost_function
         self.interval = interval
 
-    def annealing(self, n_iterations=1000):
-        state = self.__random_start()
+    def annealing(self, start_point=None, n_iterations=10000):
+        state = self.__random_start() if start_point is None else start_point
         cost = self.cost_function(state)
         states, costs = [state], [cost]
+        T0 = 2500  # Initial temperature
+        alpha = 0.95  # Cooling rate
         for step in range(n_iterations):
             fraction = step / float(n_iterations)
-            T = self.__temperature(fraction)
+            T = T0 * (alpha ** step)
             new_state = self.__random_neighbour(state, fraction)
             new_cost = self.cost_function(new_state)
             if new_cost < cost or self.__acceptance_probability(cost, new_cost, T) > np.random.random():
@@ -32,8 +36,8 @@ class SimulatedAnnealing:
 
     def __random_neighbour(self, x, fraction=1.0):
         a, b = self.interval
-        amplitude = (b - a) * fraction / 10
-        delta = (-amplitude / 2) + amplitude * np.random.random_sample()
+        amplitude = (b - a) / 100
+        delta = (-amplitude / 2) + amplitude * np.random.random_sample(size=len(x))
         return self.__clip(x + delta)
 
     def __random_start(self):
